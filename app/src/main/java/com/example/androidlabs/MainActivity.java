@@ -21,6 +21,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button loginButton =findViewById(R.id.login);
+
+        loginButton.setOnClickListener(bt -> {sa(String s)});
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = getSharedPreferences("Login Information", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = prefs.edit();
+        String savedString = prefs.getString(Reserver)
+        edit.putString("")
+
+    }
+    private void saveSharedPrefs(String stringtoSave){
+
 
 
 }
