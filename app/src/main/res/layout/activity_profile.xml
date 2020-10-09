@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your Profile"
+        android:text="@string/profile_header"
         android:textSize="25sp"
         android:layout_gravity="center_horizontal"
         />
@@ -18,35 +18,35 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your name:"
+        android:text="@string/uname"
         android:textSize="20sp"
         />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="Enter your name..."
+        android:hint="@string/namehint"
         android:inputType="textPersonName"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your email:"
+        android:text="@string/uemail"
         android:textSize="20sp"
         />
     <EditText
         android:id="@+id/myemail"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="Enter your email..."
+        android:hint="@string/emailhint"
         android:inputType="textEmailAddress"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your picture:"
+        android:text="@string/upicture"
         android:textSize="20sp"
         />
 
@@ -59,7 +59,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click the button above to take a picture"
+        android:text="@string/clickText"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         />
