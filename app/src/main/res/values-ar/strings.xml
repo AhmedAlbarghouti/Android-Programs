@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="hello_message">مرحبا!</string>
-    <string name="ButtonText">انا زر</string>
+<string name="enter_email">أدخل عنوان بريدك الالكتروني:</string>
+    <string name="pass">"اكتب كلمة المرور الخاصة بك: "</string>
+    <string name="emailhint">اكتب البريد الإلكتروني هنا. . .</string>
+    <string name="login">"تسجيل الدخول "</string>
+    <string name="profile_header">"ملفك الشخصي "</string>
+    <string name="uname">"اسمك: "</string>
+    <string name="namehint">"أدخل أسمك... "</string>
+    <string name="uemail">"بريدك الالكتروني: "</string>
+    <string name="upicture">"صورتك: "</string>
+    <string name="clickText">"انقر فوق الزر أعلاه لالتقاط صورة "</string>
 </resources>
