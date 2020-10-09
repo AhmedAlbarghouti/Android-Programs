@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Profile"
+        android:textSize="25sp"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your name:"
+        android:textSize="20sp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your name..."
+        android:inputType="textPersonName"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your email:"
+        android:textSize="20sp"
+        />
+    <EditText
+        android:id="@+id/myemail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your email..."
+        android:inputType="textEmailAddress"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your picture:"
+        android:textSize="20sp"
+        />
+
+    <ImageButton
+        android:id="@+id/imagecap"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@android:drawable/picture_frame"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click the button above to take a picture"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        />
+</LinearLayout>
