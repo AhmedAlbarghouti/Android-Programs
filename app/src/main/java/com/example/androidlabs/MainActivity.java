@@ -21,28 +21,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Button loginButton = findViewById(R.id.login);
         EditText emailText = findViewById(R.id.emailText);
-
 
         SharedPreferences prefs = getSharedPreferences("Login Information", Context.MODE_PRIVATE);
         String saved = prefs.getString(email, "");
         emailText.setText(saved);
-        Intent goToProfile = new Intent(MainActivity.this, ProfileActivity.class);
-        goToProfile.putExtra("EMAIL",saved);
-        loginButton.setOnClickListener(bt -> saveSharedPrefs(emailText.getText().toString()));
-        loginButton.setOnClickListener(bt -> startActivity(goToProfile));
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String savedEmail = emailText.getText().toString();
+                saveSharedPrefs(savedEmail);
+                Intent goToProfile = new Intent(MainActivity.this, ProfileActivity.class);
+                goToProfile.putExtra("EMAIL",savedEmail);
+                startActivity(goToProfile);
+            }
+        });
+
+    }
 
 
 
-
-
-
-
-
-
-}
     private void saveSharedPrefs(String saved){
         SharedPreferences prefs = getSharedPreferences("Login Information", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = prefs.edit();
