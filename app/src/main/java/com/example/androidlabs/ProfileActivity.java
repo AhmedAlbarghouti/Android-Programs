@@ -7,11 +7,13 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 public class ProfileActivity extends AppCompatActivity {
-
+    Button cbt;
     ImageButton bt;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final String ACTIVITY_NAME = "ProfileActivity";
@@ -20,6 +22,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         setContentView(R.layout.activity_profile);
         super.onCreate(savedInstanceState);
         Log.e(ACTIVITY_NAME, "In onCreate");
@@ -29,8 +33,11 @@ public class ProfileActivity extends AppCompatActivity {
         myemail.setText(emailText);
         ImageButton image = findViewById(R.id.imagecap);
         bt = image;
+        Button chatbt = findViewById(R.id.chatButton);
+        cbt = chatbt;
         image.setOnClickListener(bt -> dispatchTakePictureIntent());
 
+        chatbt.setOnClickListener(cbt-> startActivity(new Intent(ProfileActivity.this, ChatRoomActivity.class)));
     }
 
     private void dispatchTakePictureIntent(){
