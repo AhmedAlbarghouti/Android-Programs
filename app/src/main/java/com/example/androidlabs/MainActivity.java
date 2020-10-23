@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.login);
         EditText emailText = findViewById(R.id.emailText);
 
-        SharedPreferences prefs = getSharedPreferences("Login Information", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("Login", Context.MODE_PRIVATE);
         String saved = prefs.getString(email, "");
         emailText.setText(saved);
 
@@ -39,12 +39,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
 
 
     private void saveSharedPrefs(String saved){
-        SharedPreferences prefs = getSharedPreferences("Login Information", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("Login", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString(email,saved);
         edit.commit();

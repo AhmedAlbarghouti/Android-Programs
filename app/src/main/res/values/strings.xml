@@ -10,5 +10,8 @@
     <string name="uemail">Your email:</string>
     <string name="upicture">Your picture:</string>
     <string name="clickText">Click the button above to take a picture</string>
-    <string name="gochat" translatable="false">Go to chat</string>
+    <string name="gochat" >Go to chat</string>
+    <string name="sButton">Send</string>
+    <string name="tHere">Type Here</string>
+    <string name="rButton">Receive</string>
 </resources>

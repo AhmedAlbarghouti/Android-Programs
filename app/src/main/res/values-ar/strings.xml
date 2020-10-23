@@ -11,4 +11,8 @@
     <string name="uemail">"بريدك الالكتروني: "</string>
     <string name="upicture">"صورتك: "</string>
     <string name="clickText">"انقر فوق الزر أعلاه لالتقاط صورة "</string>
+    <string name="gochat" >اذهب إلى الدردشة</string>
+    <string name="sButton">إرسال</string>
+    <string name="tHere">أكتب هنا</string>
+    <string name="rButton">تسلم</string>
 </resources>
