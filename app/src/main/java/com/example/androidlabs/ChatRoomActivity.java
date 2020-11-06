@@ -3,12 +3,17 @@ package com.example.androidlabs;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,13 +21,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ChatRoomActivity extends AppCompatActivity {
     private ArrayList<Message> elements = new ArrayList<>();
     myListAdapter listAdapter = new myListAdapter();
     Button sbt;
     Button rbt;
-
+    SQLiteDatabase db;
     EditText et;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,44 +40,54 @@ public class ChatRoomActivity extends AppCompatActivity {
         rbt = findViewById(R.id.myRButton);
         et = findViewById(R.id.txtmsg);
 
+        loadDataFromDatabase();
+        MyOpener dbHelper = new MyOpener(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         sbt.setOnClickListener(click ->
              {
-                Message message = new Message(et.getEditableText().toString(),true);
-                elements.add(message);
+
+
+                 String TextMessage = et.getEditableText().toString();
+                 ContentValues newRowValues = new ContentValues();
+                 newRowValues.put(MyOpener.COLUMN_M,TextMessage);
+                 newRowValues.put(MyOpener.COLUMN_User,1);
+
+                 long newId = db.insert(MyOpener.TABLE_NAME, null, newRowValues);
+                 Message message = new Message(et.getEditableText().toString(),true,newId);
+                 elements.add(message);
                 et.getEditableText().clear();
                 listAdapter.notifyDataSetChanged();
+
+                 String [] columns = {MyOpener.COLUMN_ID, MyOpener.COLUMN_M, MyOpener.COLUMN_User};
+                 Cursor checker = db.query(false,MyOpener.TABLE_NAME,columns,null,null,null,null,null,null);
+                 printCursor(checker,db.getVersion());
             });
 
 
         rbt.setOnClickListener(click ->
         {
-                Message message = new Message(et.getEditableText().toString(),false);
-                elements.add(message);
-                et.getEditableText().clear();
-                listAdapter.notifyDataSetChanged();
+
+            String TextMessage = et.getEditableText().toString();
+            ContentValues newRowValues = new ContentValues();
+            newRowValues.put(MyOpener.COLUMN_M,TextMessage);
+            newRowValues.put(MyOpener.COLUMN_User,0);
+
+            long newId = db.insert(MyOpener.TABLE_NAME, null, newRowValues);
+
+            Message message = new Message(et.getEditableText().toString(),false,newId);
+            elements.add(message);
+            et.getEditableText().clear();
+            listAdapter.notifyDataSetChanged();
+
+            String [] columns = {MyOpener.COLUMN_ID, MyOpener.COLUMN_M, MyOpener.COLUMN_User};
+            Cursor checker = db.query(false,MyOpener.TABLE_NAME,columns,null,null,null,null,null,null);
+            printCursor(checker,db.getVersion());
             });
 
 
         chatList.setOnItemLongClickListener((parent, view, pos, id) -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Are you sure you want to delete")
-                    .setMessage("The selected row is "+(listAdapter.getItemId(pos)+1)+" The database id: "+listAdapter.getItemId(pos))
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            elements.remove(pos);
-                            listAdapter.notifyDataSetChanged();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-
+            showMessage(pos);
             return false;
         });
 
@@ -79,8 +95,93 @@ public class ChatRoomActivity extends AppCompatActivity {
 
 
 
+
     }
-    
+    private void printCursor (Cursor c, int version){
+
+        MyOpener dbHelper = new MyOpener(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int idColIndex = c.getColumnIndex(MyOpener.COLUMN_ID);
+        int textColIndex = c.getColumnIndex(MyOpener.COLUMN_M);
+        int senderColIndex = c.getColumnIndex(MyOpener.COLUMN_User);
+
+       Log.i("Database Version ", String.valueOf(db.getVersion()));
+       Log.i("Number of Columns ", String.valueOf(c.getColumnCount()));
+       Log.i("Name of Columns", Arrays.toString(c.getColumnNames()));
+       Log.i("Number of Rows", String.valueOf(c.getCount()));
+       while(c.moveToNext()){
+
+           long id = c.getLong(idColIndex);
+           String text = c.getString(textColIndex);
+           int sender = c.getInt(senderColIndex);
+           Log.i("Result of Each Rows", " " + id + " " + text + " " + sender);
+
+
+       }
+       c.moveToPosition(0);
+    }
+    private void showMessage(int pos){
+
+        Message selectedMessage = elements.get(pos);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Are you sure you want to delete")
+                .setMessage("The selected row is "+(listAdapter.getItemId(pos))+" The database id: "+listAdapter.getItemId(pos))
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteMessage(selectedMessage);
+                        elements.remove(pos);
+                        listAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void deleteMessage(Message msg){
+        MyOpener dbHelper = new MyOpener(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(MyOpener.TABLE_NAME, MyOpener.COLUMN_ID + "= ?", new String[] {Long.toString(msg.getId())});
+        String [] columns = {MyOpener.COLUMN_ID, MyOpener.COLUMN_M, MyOpener.COLUMN_User};
+        Cursor checker = db.query(false,MyOpener.TABLE_NAME,columns,null,null,null,null,null,null);
+        printCursor(checker,db.getVersion());
+    }
+    private void loadDataFromDatabase() {
+
+        MyOpener dbHelper = new MyOpener(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String [] columns = {MyOpener.COLUMN_ID, MyOpener.COLUMN_M, MyOpener.COLUMN_User};
+
+        Cursor results = db.query(false,MyOpener.TABLE_NAME,columns,null,null,null,null,null,null);
+
+        int idColIndex = results.getColumnIndex(MyOpener.COLUMN_ID);
+        int textColIndex = results.getColumnIndex(MyOpener.COLUMN_M);
+        int senderColIndex = results.getColumnIndex(MyOpener.COLUMN_User);
+        Cursor checker = db.query(false,MyOpener.TABLE_NAME,columns,null,null,null,null,null,null);
+       printCursor(checker,db.getVersion());
+
+        while(results.moveToNext())
+        {
+            long id = results.getLong(idColIndex);
+            String text = results.getString(textColIndex);
+            int sender = results.getInt(senderColIndex);
+          if(sender==1){
+              elements.add(new Message(text,true,id));
+          }else{
+              elements.add(new Message(text,false,id));
+          }
+
+
+        }
+
+    }
+
     class myListAdapter extends BaseAdapter{
 
         @Override
@@ -95,7 +196,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return (long)position;
+            return elements.get(position).getId();
         }
 
         @Override
@@ -123,10 +224,12 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         private String text; // message string
         private boolean cond;        // true for message from sender and false for message from receiver
+        private long id;
 
-        public Message(String text, boolean cond) {
+        public Message(String text, boolean cond, long id) {
             this.text = text;
             this.cond = cond;
+            this.id = id;
         }
 
         public String getText() {
@@ -145,6 +248,41 @@ public class ChatRoomActivity extends AppCompatActivity {
             this.cond = cond;
         }
 
+        public long getId() {
+            return id;
+        }
 
+        public void setId(long id) {
+            this.id = id;
+        }
+
+
+    }
+
+    public class MyOpener extends SQLiteOpenHelper {
+        private final static String DATABASE_NAME = "Chat_HistoryDB";
+        private final static int VERSION_NUM = 1;
+        private final static String TABLE_NAME= "Chat_History";
+        private final static String COLUMN_M = "Message";
+        private final static String COLUMN_ID = "_id";
+        private final static String COLUMN_User = "Sent";
+
+        public MyOpener(Context ctx){
+            super(ctx, DATABASE_NAME, null, VERSION_NUM);
+        }
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+
+            db.execSQL("CREATE TABLE " + TABLE_NAME + "("+ COLUMN_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,  "
+             +
+                     COLUMN_M + " text,"
+                    +COLUMN_User+ " INTEGER);");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+             db.execSQL("DROP TABLE IF EXISTS " +TABLE_NAME);
+             onCreate(db);
+        }
     }
 }
