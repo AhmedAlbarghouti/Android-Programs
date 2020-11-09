@@ -15,4 +15,5 @@
     <string name="sButton">إرسال</string>
     <string name="tHere">أكتب هنا</string>
     <string name="rButton">تسلم</string>
+    <string name="goweather">اذهب إلى الطقس</string>
 </resources>

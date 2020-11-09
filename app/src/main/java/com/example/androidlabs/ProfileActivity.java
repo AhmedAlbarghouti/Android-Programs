@@ -7,13 +7,13 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 public class ProfileActivity extends AppCompatActivity {
     Button cbt;
+    Button wbt;
     ImageButton bt;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final String ACTIVITY_NAME = "ProfileActivity";
@@ -36,7 +36,10 @@ public class ProfileActivity extends AppCompatActivity {
         Button chatbt = findViewById(R.id.chatButton);
         cbt = chatbt;
         image.setOnClickListener(bt -> dispatchTakePictureIntent());
+        Button weatherbt = findViewById(R.id.weatherButton);
+        wbt = weatherbt;
 
+        weatherbt.setOnClickListener(wbt-> startActivity(new Intent(ProfileActivity.this, WeatherForecast.class)));
         chatbt.setOnClickListener(cbt-> startActivity(new Intent(ProfileActivity.this, ChatRoomActivity.class)));
     }
 
