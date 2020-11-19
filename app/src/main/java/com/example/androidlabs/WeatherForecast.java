@@ -107,6 +107,8 @@ public class WeatherForecast extends AppCompatActivity {
 
                             if(fileExistance(iconName+".png") == true){
                                 FileInputStream fis = null;
+                                Log.d("Weather Image", "Loading Local Image");
+
                                 try {    fis = openFileInput(iconName+".png");   }
                                 catch (FileNotFoundException e) {    e.printStackTrace();  }
                                 weathpic = BitmapFactory.decodeStream(fis);
