@@ -2,14 +2,17 @@ package com.example.androidlabs;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,11 @@ public class ChatRoomActivity extends AppCompatActivity {
     Button rbt;
     SQLiteDatabase db;
     EditText et;
+    private AppCompatActivity parentActivity;
+    public static final String ID = "ID";
+    public static final String MESSAGE = "MESSAGE";
+    public static final String SENDER = "SENDER";
+    Bundle dataToPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +47,36 @@ public class ChatRoomActivity extends AppCompatActivity {
         sbt = findViewById(R.id.mySButton);
         rbt = findViewById(R.id.myRButton);
         et = findViewById(R.id.txtmsg);
+        boolean isTablet = findViewById(R.id.fLayout) != null; //check if the FrameLayout is loaded
 
         loadDataFromDatabase();
         MyOpener dbHelper = new MyOpener(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        chatList.setOnItemClickListener((list, item,position,id) -> {
+            //Create a bundle to pass data to the new fragment
+            Bundle dataToPass = new Bundle();
+            dataToPass.putString(MESSAGE,elements.get(position).getText());
+            dataToPass.putBoolean(SENDER, elements.get(position).getcond());
+            dataToPass.putLong(ID, id);
+
+
+            if(isTablet)
+            {
+                DetailsFragment dFragment = new DetailsFragment(); //add a DetailFragment
+                dFragment.setArguments( dataToPass ); //pass it a bundle for information
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fLayout, dFragment) //Add the fragment in FrameLayout
+                        .commit(); //actually load the fragment. Calls onCreate() in DetailFragment
+            }
+            else //isPhone
+            {
+                Intent nextActivity = new Intent(ChatRoomActivity.this, EmptyActivity.class);
+                nextActivity.putExtras(dataToPass); //send data to next activity
+                startActivity(nextActivity); //make the transition
+            }
+        });
         sbt.setOnClickListener(click ->
              {
 
@@ -150,6 +183,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         db.delete(MyOpener.TABLE_NAME, MyOpener.COLUMN_ID + "= ?", new String[] {Long.toString(msg.getId())});
         String [] columns = {MyOpener.COLUMN_ID, MyOpener.COLUMN_M, MyOpener.COLUMN_User};
         Cursor checker = db.query(false,MyOpener.TABLE_NAME,columns,null,null,null,null,null,null);
+
         printCursor(checker,db.getVersion());
     }
     private void loadDataFromDatabase() {

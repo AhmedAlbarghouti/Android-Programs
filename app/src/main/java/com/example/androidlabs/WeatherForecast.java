@@ -124,6 +124,7 @@ public class WeatherForecast extends AppCompatActivity {
                             FileOutputStream outputStream = openFileOutput( iconName + ".png", Context.MODE_PRIVATE);
                             weathpic.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                             outputStream.flush();
+
                             outputStream.close();
                             publishProgress(100);
 

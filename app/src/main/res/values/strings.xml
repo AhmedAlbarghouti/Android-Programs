@@ -15,4 +15,6 @@
     <string name="tHere">Type Here</string>
     <string name="rButton">Receive</string>
     <string name="goweather">Go to weather</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
